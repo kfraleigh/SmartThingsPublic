@@ -469,7 +469,7 @@ def poll() {
 	if (getDataValue("MSR") == null) {
 		cmds << zwave.manufacturerSpecificV1.manufacturerSpecificGet().format()
 	}
-	delayBetween(cmds,500)
+	delayBetween(cmds,600)
 }
 
 def ping() {
@@ -491,14 +491,14 @@ def refresh() {
 	if (getDataValue("MSR") == null) {
 		cmds << zwave.manufacturerSpecificV1.manufacturerSpecificGet().format()
 	}
-	delayBetween(cmds,500)
+	delayBetween(cmds,600)
 }
 
 def on() {
 	def cmds = []
     cmds << zwave.basicV1.basicSet(value: 0xFF).format()
    	cmds << zwave.switchMultilevelV2.switchMultilevelGet().format()
-    def delay = (device.currentValue("zwaveSteps") * device.currentValue("zwaveDelay")).longValue() + 1000
+    def delay = (device.currentValue("zwaveSteps") * device.currentValue("zwaveDelay")).longValue() * 1000
     delayBetween(cmds, delay)
 }
 
@@ -506,7 +506,7 @@ def off() {
 	def cmds = []
     cmds << zwave.basicV1.basicSet(value: 0x00).format()
    	cmds << zwave.switchMultilevelV2.switchMultilevelGet().format()
-    def delay = (device.currentValue("zwaveSteps") * device.currentValue("zwaveDelay")).longValue() + 1000
+    def delay = (device.currentValue("zwaveSteps") * device.currentValue("zwaveDelay")).longValue() * 1000
     delayBetween(cmds, delay)
 }
 
@@ -519,7 +519,7 @@ def setLevel(value) {
 		sendEvent(name: "switch", value: "off")
 	}
 	sendEvent(name: "level", value: level, unit: "%")
-    def delay = (device.currentValue("zwaveSteps") * device.currentValue("zwaveDelay") * level / 100).longValue() + 1000
+    def delay = (device.currentValue("zwaveSteps") * device.currentValue("zwaveDelay") * level / 100).longValue() * 1000
 	delayBetween ([
     	zwave.basicV1.basicSet(value: level).format(),
         zwave.switchMultilevelV1.switchMultilevelGet().format()

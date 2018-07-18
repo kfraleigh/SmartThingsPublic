@@ -259,7 +259,7 @@ def refresh() {
 	if (getDataValue("MSR") == null) {
 		commands << zwave.manufacturerSpecificV1.manufacturerSpecificGet().format()
 	}
-	delayBetween(commands, 100)
+	delayBetween(commands, 600)
 }
 
 def isHoneywellDimmer() {

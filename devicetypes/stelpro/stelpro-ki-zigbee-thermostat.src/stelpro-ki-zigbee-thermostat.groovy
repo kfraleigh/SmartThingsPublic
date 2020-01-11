@@ -354,7 +354,7 @@ def handleTemperature(descMap) {
 
 		// Handle cases where we need to update the temperature alarm state given certain temperatures
 		// Account for a f/w bug where the freeze alarm doesn't trigger at 0C
-		if (map.value < (map.unit == "C" ? 0 : 32)) {
+		if (map.value <= (map.unit == "C" ? 0 : 32)) {
 			log.debug "EARLY FREEZE ALARM @ $map.value $map.unit (raw $intVal)"
 			sendEvent(name: "temperatureAlarm", value: "freeze")
 		}
@@ -418,7 +418,7 @@ def validateOperatingStateBugfix(map) {
 	if (state.rawSetpoint != null && state.rawTemp != null) {
 		def oldVal = map.value
 
-		if (state.rawSetpoint <= state.rawTemp) {
+		if (state.rawSetpoint <= state.rawTemp || device.currentValue("thermostatMode") == "off") {
 			map.value = "idle"
 		} else {
 			map.value = "heating"
@@ -429,6 +429,7 @@ def validateOperatingStateBugfix(map) {
 			map.data = [correctedValue: true]
 		}
 	}
+
 	map
 }
 
